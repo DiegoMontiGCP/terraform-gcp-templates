@@ -53,3 +53,7 @@ variable "software_config" {
   })
 
 }
+
+variable "test_required" {
+  type = string
+}
