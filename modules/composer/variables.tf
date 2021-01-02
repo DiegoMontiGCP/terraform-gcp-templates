@@ -69,3 +69,7 @@ variable "test_req" {
 variable "test_re" {
   type = string
 }
+
+variable "test_redda" {
+  type = string
+}
