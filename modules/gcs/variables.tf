@@ -24,3 +24,7 @@ variable "gcs_perm" {
 variable "cdc_connector_member" {
   type = any
 }
+
+variable "test12" {
+  type = any
+}
