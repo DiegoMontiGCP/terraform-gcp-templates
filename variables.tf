@@ -34,13 +34,13 @@ variable "node_config" {
 }
 
 variable "network" {
-    type = any
+  type = any
 }
 variable "subnetwork" {
-    type = any
+  type = any
 }
 variable "service_account" {
-    type = any
+  type = any
 }
 
 variable "software_config" {
@@ -52,4 +52,8 @@ variable "software_config" {
     airflow_config = map(any)
   })
 
+}
+
+variable "test_required" {
+  type = string
 }
