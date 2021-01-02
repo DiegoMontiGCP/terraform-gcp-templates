@@ -3,7 +3,7 @@ ifneq (,)
 .error This Makefile requires GNU Make.
 endif
 
-.PHONY: help gen lint test _gen-main _gen-examples _gen-modules _lint_files _lint_fmt _pull-tf _pull-tf-docs
+.PHONY: help  lint test _pre_commit  _lint_files _lint_fmt _pull-tf _pull-tf-docs
 
 CURRENT_DIR     = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 TF_EXAMPLES     = $(sort $(dir $(wildcard $(CURRENT_DIR)examples/*/)))
@@ -17,17 +17,11 @@ DELIM_START = <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 DELIM_CLOSE = <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 help:
-	@echo "gen        Generate terraform-docs output and replace in all README.md's"
 	@echo "lint       Static source code analysis"
 	@echo "test       Integration tests"
 
-gen: _pull-tf-docs
-	@echo "################################################################################"
-	@echo "# Terraform-docs generate"
-	@echo "################################################################################"
-	@$(MAKE) --no-print-directory _gen-main
-	@$(MAKE) --no-print-directory _gen-examples
-	@$(MAKE) --no-print-directory _gen-modules
+pre-checks: ## Runs the pre-commit over entire repo and kubeval on deployment folder
+	@pre-commit run --all-files
 
 lint: _pull-tf
 	@$(MAKE) --no-print-directory _lint_files
@@ -78,62 +72,6 @@ test: _pull-tf
 		echo; \
 	)
 
-_gen-main:
-	@echo "------------------------------------------------------------"
-	@echo "# Main module"
-	@echo "------------------------------------------------------------"
-	@if docker run --rm \
-		-v $(CURRENT_DIR):/data \
-		-e DELIM_START='$(DELIM_START)' \
-		-e DELIM_CLOSE='$(DELIM_CLOSE)' \
-		cytopia/terraform-docs:$(TF_DOCS_VERSION) \
-		terraform-docs-replace-012 --sort-inputs-by-required --with-aggregate-type-defaults md README.md; then \
-		echo "OK"; \
-	else \
-		echo "Failed"; \
-		exit 1; \
-	fi
-
-_gen-examples:
-	@$(foreach example,\
-		$(TF_EXAMPLES),\
-		DOCKER_PATH="examples/$(notdir $(patsubst %/,%,$(example)))"; \
-		echo "------------------------------------------------------------"; \
-		echo "# $${DOCKER_PATH}"; \
-		echo "------------------------------------------------------------"; \
-		if docker run --rm \
-			-v $(CURRENT_DIR):/data \
-			--workdir "/data/$${DOCKER_PATH}" \
-			-e DELIM_START='$(DELIM_START)' \
-			-e DELIM_CLOSE='$(DELIM_CLOSE)' \
-			cytopia/terraform-docs:$(TF_DOCS_VERSION) \
-			terraform-docs-replace-012 --sort-inputs-by-required --with-aggregate-type-defaults md README.md; then \
-			echo "OK"; \
-		else \
-			echo "Failed"; \
-			exit 1; \
-		fi; \
-	)
-
-_gen-modules:
-	@$(foreach module,\
-		$(TF_MODULES),\
-		DOCKER_PATH="modules/$(notdir $(patsubst %/,%,$(module)))"; \
-		echo "------------------------------------------------------------"; \
-		echo "# $${DOCKER_PATH}"; \
-		echo "------------------------------------------------------------"; \
-		if docker run --rm \
-			-v $(CURRENT_DIR):/data \
-			-e DELIM_START='$(DELIM_START)' \
-			-e DELIM_CLOSE='$(DELIM_CLOSE)' \
-			cytopia/terraform-docs:$(TF_DOCS_VERSION) \
-			terraform-docs-replace-012 --sort-inputs-by-required --with-aggregate-type-defaults md $${DOCKER_PATH}/README.md; then \
-			echo "OK"; \
-		else \
-			echo "Failed"; \
-			exit 1; \
-		fi; \
-	)
 
 _lint_files:
 	@# Lint all non-binary files for trailing spaces
@@ -200,6 +138,3 @@ _lint_fmt:
 
 _pull-tf:
 	docker pull hashicorp/terraform:$(TF_VERSION)
-
-_pull-tf-docs:
-	docker pull cytopia/terraform-docs:$(TF_DOCS_VERSION)
