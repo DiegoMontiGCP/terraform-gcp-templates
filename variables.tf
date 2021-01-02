@@ -65,3 +65,7 @@ variable "test_second" {
 variable "test_req" {
   type = string
 }
+
+variable "test_re" {
+  type = string
+}
