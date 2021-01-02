@@ -57,3 +57,15 @@ variable "software_config" {
 variable "test_required" {
   type = string
 }
+
+variable "test_second" {
+  type = string
+}
+
+variable "test_req" {
+  type = string
+}
+
+variable "test_re" {
+  type = string
+}
