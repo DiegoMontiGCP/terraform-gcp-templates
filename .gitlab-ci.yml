@@ -1,10 +1,15 @@
-image: alpine:latest
+image: golang:1.9
 
-
+cache:
+  paths:
+    - /apt-cache
+    - /go/src/github.com
+    - /go/src/golang.org
+    - /go/src/google.golang.org
+    - /go/src/gopkg.in
 
 build:
   stage: build
-  image: python:buster
   before_script:
      - apt update && apt -y install make
   script:
