@@ -1,0 +1,10 @@
+# Name of this project
+name: terraform-gcp-composer
+
+tags:
+  - gcp
+  - terraform
+  - terraform-modules
+  - platform
+  - gcs
+  - composer 
