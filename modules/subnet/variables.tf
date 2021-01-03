@@ -7,13 +7,14 @@ variable "network_name" {
 }
 
 variable "subnets" {
-  type        = list(map(string))
   description = "The list of subnets being created"
+  type        = list(map(object({
+    subnet_name = string
+    subnet_ip   = string
+    subnet_region = string
+    private_ip_google_access = bool
+    description             = string 
+  })))
+  
 }
 
-variable "secondary_ranges" {
-  type        = map(list(object({ range_name = string, ip_cidr_range = string })))
-  description = "Secondary ranges that will be used in some of the subnets"
-  default     = {}
-
-}
