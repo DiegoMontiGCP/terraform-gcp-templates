@@ -1,49 +1,95 @@
 variable "project_id" {
-  type = string
+  description = "Project ID where Cloud Composer Environment is created."
+  type        = string
 }
 
 variable "region" {
-  type = string
+  description = "Region where Cloud Composer Environment is created."
+  type        = string
 }
 
 variable "zone" {
-  type = string
+  description = "Region where Cloud Composer Environment is created."
+  type        = string
 }
 
 variable "composer_env_name" {
-  type = string
+  description = "Name of Cloud Composer Environment."
+  type        = string
 }
 
 variable "node_count" {
-  type = string
+  description = "Number of nodes in the GKE cluster that will be used to run the composer environment "
+  type        = number
+  default     = 3
 }
 
 variable "composer_private_env" {
+  description = "Enabled and Configure Private IP Composer Environment"
   type = object({
-    enabled                = bool
-    master_ipv4_cidr_block = string
+    private_ip_enabled         = bool
+    master_ipv4_cidr_block     = string
+    cloud_sql_ipv4_cidr_block  = string
+    web_server_ipv4_cidr_block = string
   })
+
+  default = {
+    private_ip_enabled         = false
+    master_ipv4_cidr_block     = null
+    cloud_sql_ipv4_cidr_block  = null
+    web_server_ipv4_cidr_block = null
+  }
 }
 
 variable "node_config" {
+  description = "Configure the node and optionally enable VPC Native GKE cluster in your envrionment."
   type = object({
-    disk_size_gb      = number
-    machine_type      = string
-    enable_ip_aliases = bool
+    disk_size_gb = number
+    machine_type = string
+    oauth_scopes = list(string)
   })
+
+  default = {
+    disk_size_gb = 100
+    machine_type = "n1-standard-1"
+    oauth_scopes = null
+  }
 }
 
+variable "ip_allocation_settings" {
+  description = "IP allocation policy"
+  type = object({
+    enable_ip_aliases        = bool
+    cluster_ipv4_cidr_block  = string
+    services_ipv4_cidr_block = string
+  })
+
+  default = {
+    enable_ip_aliases        = false
+    cluster_ipv4_cidr_block  = null
+    services_ipv4_cidr_block = null
+  }
+}
+
+
 variable "network" {
-  type = any
+  description = "The Virtual Private Cloud Network."
+  type        = any
 }
+
 variable "subnetwork" {
-  type = any
+  description = "The Virtual Private Cloud subnetwork."
+  type        = any
 }
-variable "service_account" {
-  type = any
+
+variable "composer_service_account" {
+  description = "Service Account to be used for running Cloud Composer Environment."
+  type        = any
+  default     = null
 }
 
 variable "software_config" {
+  description = "Composer software configuration."
   type = object({
     image_version  = string
     python_version = string
@@ -52,24 +98,4 @@ variable "software_config" {
     airflow_config = map(any)
   })
 
-}
-
-variable "test_required" {
-  type = string
-}
-
-variable "test_second" {
-  type = string
-}
-
-variable "test_req" {
-  type = string
-}
-
-variable "test_re" {
-  type = string
-}
-
-variable "test_redda" {
-  type = string
 }
