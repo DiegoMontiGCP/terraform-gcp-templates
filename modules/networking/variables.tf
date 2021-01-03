@@ -18,6 +18,7 @@ variable "delete_default_routes_on_create" {
 }
 
 variable "mtu" {
+
 }
 
 

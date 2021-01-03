@@ -34,4 +34,5 @@ variable "mtu" {
   type        = number
   description = "The network MTU (default '1460'). Must be a value between 1460 and 1500 inclusive."
   default     = 1460
+
 }
