@@ -1,4 +1,4 @@
-variable "network" {
+variable "network_name" {
   description = "Name of the network this set of firewall rules applies to."
 }
 
