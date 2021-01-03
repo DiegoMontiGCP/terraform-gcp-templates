@@ -23,4 +23,5 @@ variable "custom_rules" {
     }))
     extra_attributes = map(string)
   }))
+
 }
