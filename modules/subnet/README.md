@@ -37,11 +37,11 @@ The subnets list contains maps, where each object represents a subnet. Each map 
 
 | Name                         | Description                                                                                                     |  Type  |         Default          | Required |
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------- | :----: | :----------------------: | :------: |
-| subnet\_name                 | The name of the subnet being created                                                                            | string |            -             |   yes    |
-| subnet\_ip                   | The IP and CIDR range of the subnet being created                                                               | string |            -             |   yes    |
+| subnet\_name                 | The name of the subnet to be created                                                                          | string |            -             |   yes    |
+| subnet\_ip                   | The IP CIDR range of the subnet to be created                                                                 | string |            -             |   yes    |
 | subnet\_region               | The region where the subnet will be created                                                                     | string |            -             |   yes    |
-| subnet\_private\_access      | Whether this subnet will have private Google access enabled                                                     | string |        `"false"`         |    no    |
-| subnet\_flow\_logs           | Whether the subnet will record and send flow log data to logging                                                | string |        `"false"`         |    no    |
-| subnet\_flow\_logs\_interval | If subnet\_flow\_logs is true, sets the aggregation interval for collecting flow logs                           | string |    `"INTERVAL_5_SEC"`    |    no    |
-| subnet\_flow\_logs\_sampling | If subnet\_flow\_logs is true, set the sampling rate of VPC flow logs within the subnetwork                     | string |         `"0.5"`          |    no    |
-| subnet\_flow\_logs\_metadata | If subnet\_flow\_logs is true, configures whether metadata fields should be added to the reported VPC flow logs | string | `"INCLUDE_ALL_METADATA"` |    no    |
+| private\_ip\_google\_access  | Optionally enable private Google access                                                      | string |        `"false"`         |    no    |
+| enable\_logs                  | Whether the subnet will record and send flow log data to logging                                                | string |        `"false"`         |    no    |
+| logs\_interval                | If enable\_logs is true, sets the aggregation interval for collecting flow logs                           | string |    `"INTERVAL_5_SEC"`    |    no    |
+| logs\_sampling                 |  If enable\_logsis true, set the sampling rate of VPC flow logs within the subnetwork                     | string |         `"0.5"`          |    no    |
+| logs\_metadata    |  If enable\_logs is true, configures whether metadata fields should be added to the reported VPC flow logs | string | `"INCLUDE_ALL_METADATA"` |    no    |
