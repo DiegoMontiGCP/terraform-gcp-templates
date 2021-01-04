@@ -1,9 +1,13 @@
 output "bucket_names" {
   description = "Bucket names."
-  value = { for key, bucket in google_storage_bucket.buckets : key => bucket.name}
+  value = { for key, bucket in google_storage_bucket.buckets :
+    key => bucket.name
+  }
 }
 
 output "bucket_full_details" {
   description = "Bucket names."
-  value = { for key, bucket in google_storage_bucket.buckets : key => bucket}
+  value = { for key, bucket in google_storage_bucket.buckets :
+    key => bucket
+  }
 }
