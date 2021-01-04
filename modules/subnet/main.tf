@@ -1,16 +1,6 @@
-/*locals {
-  subnets = {
-    for x in var.subnets :
-    "${x.subnet_region}/${x.subnet_name}" => x
-  }
-}
 
-
-*****************************************
-	Subnet configuration
- ****************************************
 resource "google_compute_subnetwork" "subnetwork" {
-  for_each                 = local.subnets
+  for_each                 = {for subnet in var.subnets: subnet.subnet_name => subnet}
   name                     = each.value.subnet_name
   ip_cidr_range            = each.value.subnet_ip
   region                   = each.value.subnet_region
@@ -40,15 +30,4 @@ resource "google_compute_subnetwork" "subnetwork" {
     )) :
     var.secondary_ranges[each.value.subnet_name][i]
   ]
-}
-*/
-
-resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" {
-  for_each      = var.subnets
-  name          = each.value.subnet_name
-  ip_cidr_range = each.value.subnet_ip
-  region        = each.value.subnet_region
-  network       = var.network_name
-  description   = each.value.description
-
 }
