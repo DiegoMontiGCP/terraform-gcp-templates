@@ -33,6 +33,7 @@
 
 ### Subnet Inputs
 
+The subnets variable is a list of maps, where each map object represent an individual subnet. Each subnet has the following inputs [usage example](../examples)
 The subnets list contains maps, where each object represents a subnet. Each map has the following inputs (please see examples folder for additional references):
 
 | Name                         | Description                                                                                                     |  Type  |         Default          | Required |
