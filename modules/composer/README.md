@@ -1,4 +1,22 @@
 # Terraform Cloud Composer Environment Module
+
+## Usage
+Basic usage of this submodule: 
+```hcl
+module "simple-composer-environment" {
+  source               = ""
+  version = "0.1.1"
+
+  project_id           = "<PROJECT ID>"
+  composer_env_name    = "example-composer"
+  region               = "europe-west2"
+  zone                 = "europe-west2-a
+  network              = "network ID"
+  subnetwork           = "subnetwork ID" 
+}
+
+```
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
