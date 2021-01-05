@@ -1,4 +1,18 @@
+# Terraform Cloud Composer Environment Module
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+## Usage
+Basic usage of this submodule: 
+```hcl
+module "composer" {
+  source  = ""
+  version = ""
+  project_id = "<Project ID>
+
+  # insert the 20 required variables here
+}
+
+```
 ## Requirements
 
 | Name | Version |
