@@ -11,16 +11,17 @@ variables:
   TF_ROOT: ${CI_PROJECT_DIR}
   TERRAFORM_VERSION: "0.14.3"
   TF_IN_AUTOMATION: "TRUE"
-
+  TFLINT_VERSION: "0.23.0"
 cache:
   paths:
     - tfplan.enc.zip
 
 stages:
   - pre-checks
+  - tf-lint
   - plan
   
-
+  
 precommit:
   stage: pre-checks
   image: python:buster
@@ -43,6 +44,16 @@ security-check:
   script:
     - pip3 install checkov
     - checkov -d .
+
+terraform-lint:
+  stage: tf-lint
+  before_script:
+     - apk add zip git
+     - curl -L  https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}/tflint_linux_amd64.zip -o tflint.zip
+     - unzip tflint.zip && rm tflint.zip
+     - mv tflint /usr/bin
+  script:
+   - tflint 
 
 terraform-plan:
   stage: plan
