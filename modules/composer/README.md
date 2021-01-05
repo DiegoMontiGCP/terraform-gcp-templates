@@ -2,6 +2,7 @@
 
 ## Usage
 Basic usage of this submodule: 
+
 ```hcl
 module "simple-composer-environment" {
   source               = ""
@@ -10,7 +11,7 @@ module "simple-composer-environment" {
   project_id           = "<PROJECT ID>"
   composer_env_name    = "example-composer"
   region               = "europe-west2"
-  zone                 = "europe-west2-a
+  zone                 = "europe-west2-a"
   network              = "network-id"
   subnetwork           = "subnetwork-id" 
 }
