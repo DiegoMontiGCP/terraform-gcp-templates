@@ -3,7 +3,7 @@ ifneq (,)
 .error This Makefile requires GNU Make.
 endif
 
-.PHONY: help  lint test _pre_commit  _lint_files _lint_fmt _pull-tf _pull-tf-docs
+.PHONY: help  lint test _pre_commit  _lint_files _lint_fmt 
 
 CURRENT_DIR     = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 TF_EXAMPLES     = $(sort $(dir $(wildcard $(CURRENT_DIR)examples/*/)))
@@ -12,22 +12,18 @@ TF_MODULES      = $(sort $(dir $(wildcard $(CURRENT_DIR)modules/*/)))
 TF_VERSION      = 0.14.3
 TF_DOCS_VERSION = 0.6.0
 
-# Adjust your delimiter here or overwrite via make arguments
-DELIM_START = <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-DELIM_CLOSE = <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-
 help:
 	@echo "lint       Static source code analysis"
-	@echo "test       Integration tests"
+	@echo "test       Integration tests"  
 
 pre-checks: ## Runs the pre-commit over entire repo and kubeval on deployment folder
 	@pre-commit run --all-files
 
 lint: _pull-tf
 	@$(MAKE) --no-print-directory _lint_files
-	@$(MAKE) --no-print-directory _lint_fmt
+	@$(MAKE) --no-print-directory _lint_fmt 
 
-test: _pull-tf
+test: _pull-tf  ## terraform examples TODO
 	@$(foreach example,\
 		$(TF_EXAMPLES),\
 		DOCKER_PATH="/t/examples/$(notdir $(patsubst %/,%,$(example)))"; \

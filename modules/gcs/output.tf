@@ -6,7 +6,7 @@ output "bucket_names" {
 }
 
 output "bucket_full_details" {
-  description = "Bucket names."
+  description = "Full bucket details."
   value = { for key, bucket in google_storage_bucket.buckets :
     key => bucket
   }
