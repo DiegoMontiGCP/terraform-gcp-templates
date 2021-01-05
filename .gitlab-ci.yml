@@ -11,7 +11,7 @@ variables:
   TF_ROOT: ${CI_PROJECT_DIR}
   TERRAFORM_VERSION: "0.14.3"
   TF_IN_AUTOMATION: "TRUE"
-  TFLINT_VERSION: "0.23.0"
+  TFLINT_VERSION: "v0.23.0"
   TF_DOCS_VERSION: "0.6.0"
 cache:
   paths:
@@ -34,26 +34,20 @@ precommit:
     - unzip ${TF_ZIP} && rm ${TF_ZIP}
     - mv terraform /usr/bin/terraform
     - curl -Lo ./terraform-docs https://github.com/terraform-docs/terraform-docs/releases/download/v0.10.1/terraform-docs-v0.10.1-linux-amd64
-    - chmod +x  && mv ./terraform-docs /usr/bin/local/terraform-docs
+    - chmod +x  ./terraform-docs
+    - mv ./terraform-docs /usr/bin/terraform-docs 
     - pip3 install pre-commit
   script:
     - pre-commit run --all-files
 
-security-check:
-  stage: pre-checks
-  image: python:alpine
-  before_script:
-    - pip3 install --upgrade pip && pip3 install --upgrade setuptools
-  script:
-    - pip3 install checkov
-    - checkov -d .
 
 terraform-lint:
   stage: tf-lint
   before_script:
      - apk add zip git
-     - curl -L  https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}/tflint_linux_amd64.zip -o tflint.zip
-     - unzip tflint.zip && rm tflint.zip
+     - TF_LINT_ZIP="tflint_linux_amd64.zip"
+     - wget https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION=}/${TF_LINT_ZIP}
+     - unzip ${TF_LINT_ZIP} && rm ${TF_LINT_ZIP}
      - mv tflint /usr/bin
   script:
    - tflint 
