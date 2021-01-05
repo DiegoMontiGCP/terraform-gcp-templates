@@ -42,7 +42,7 @@ variable "composer_private_env" {
 }
 
 variable "node_config" {
-  description = "Configure the node and optionally enable VPC Native GKE cluster in your envrionment."
+  description = "Configure the node."
   type = object({
     disk_size_gb = number
     machine_type = string
@@ -57,7 +57,7 @@ variable "node_config" {
 }
 
 variable "ip_allocation_settings" {
-  description = "IP allocation policy"
+  description = "IP allocation policy and optionally enable VPC Native GKE cluster in your envrionment"
   type = object({
     enable_ip_aliases        = bool
     cluster_ipv4_cidr_block  = string
@@ -83,7 +83,7 @@ variable "subnetwork" {
 }
 
 variable "composer_service_account" {
-  description = "Service Account to be used for running Cloud Composer Environment."
+  description = "Service Account to be used for running Composer Environment."
   type        = any
   default     = null
 }
@@ -97,5 +97,12 @@ variable "software_config" {
     env_variables  = map(any)
     airflow_config = map(any)
   })
+  default = {
+    image_version  = null
+    python_version = null
+    pypi_packages  = {}
+    env_variables  = {}
+    airflow_config = {}
+  }
 
 }
