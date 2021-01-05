@@ -11,14 +11,6 @@ variable "bucket_names" {
   type        = any
 }
 
-/***
-variable "logging" {
-  type = any 
-  default = {}
-}
-**/
-
-
 variable "bucket_configuration_default" {
   type = object({
     bucket_name                 = string

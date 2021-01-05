@@ -26,7 +26,7 @@
 
 | Name | Description |
 |------|-------------|
-| bucket\_full\_details | Bucket names. |
+| bucket\_full\_details | Full bucket details. |
 | bucket\_names | Bucket names. |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
