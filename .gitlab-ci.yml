@@ -33,7 +33,7 @@ precommit:
     - wget "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/${TF_ZIP}"
     - unzip ${TF_ZIP} && rm ${TF_ZIP}
     - mv terraform /usr/bin/terraform
-    - wget ./terraform-docs https://github.com/terraform-docs/terraform-docs/releases/download/v0.10.1/terraform-docs-v0.10.1-$(uname | tr '[:upper:]' '[:lower:]')-amd64
+    - curl -Lo ./terraform-docs https://github.com/terraform-docs/terraform-docs/releases/download/v0.10.1/terraform-docs-v0.10.1-linux-amd64
     - pip3 install pre-commit
   script:
     - pre-commit run --all-files
