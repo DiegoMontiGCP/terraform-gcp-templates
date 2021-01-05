@@ -11,10 +11,9 @@ module "simple-composer-environment" {
   composer_env_name    = "example-composer"
   region               = "europe-west2"
   zone                 = "europe-west2-a
-  network              = "network ID"
-  subnetwork           = "subnetwork ID" 
+  network              = "network-id"
+  subnetwork           = "subnetwork-id" 
 }
-
 ```
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
