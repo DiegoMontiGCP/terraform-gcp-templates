@@ -5,22 +5,35 @@ image: alpine:latest
 #      - approve
 #      - auto-release
 
+workflow:
+  rules:
+    # For merge requests, create a pipeline.
+    - if: '$CI_MERGE_REQUEST_IID'
+    # For `master` branch, create a pipeline (this includes on schedules, pushes, merges, etc.).
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_COMMIT_TAG'
+
 variables:
   PLAN: plan.tfplan
   PLAN_JSON: tfplan.json
   TF_ROOT: ${CI_PROJECT_DIR}
   TERRAFORM_VERSION: "0.14.3"
   TF_IN_AUTOMATION: "TRUE"
-
+  TFLINT_VERSION: "v0.23.0"
+  TF_DOCS_VERSION: "0.6.0"
 cache:
   paths:
     - tfplan.enc.zip
 
 stages:
   - pre-checks
+  - tf-lint
   - plan
-  
+  - prepare
+  - release
 
+  
+  
 precommit:
   stage: pre-checks
   image: python:buster
@@ -31,34 +44,13 @@ precommit:
     - wget "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/${TF_ZIP}"
     - unzip ${TF_ZIP} && rm ${TF_ZIP}
     - mv terraform /usr/bin/terraform
+    - curl -Lo ./terraform-docs https://github.com/terraform-docs/terraform-docs/releases/download/v0.10.1/terraform-docs-v0.10.1-linux-amd64
+    - chmod +x  ./terraform-docs
+    - mv ./terraform-docs /usr/bin/terraform-docs 
     - pip3 install pre-commit
   script:
     - pre-commit run --all-files
 
-security-check:
-  stage: pre-checks
-  image: python:alpine
-  before_script:
-    - pip3 install --upgrade pip && pip3 install --upgrade setuptools
-  script:
-    - pip3 install checkov
-    - checkov -d .
-
-terraform-plan:
-  stage: plan
-  before_script:
-    - apk add zip jq git
-    - TF_ZIP="terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
-    - wget "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/${TF_ZIP}"
-    - unzip ${TF_ZIP} && rm ${TF_ZIP}
-    - mv terraform /usr/bin/terraform
-    - echo ${GCP_CREDENTIALS} > key.json
-    - export GOOGLE_APPLICATION_CREDENTIALS=key.json
-  script:
-    - terraform init -input=false
-    - terraform plan -input=false
-    - terraform show -json | jq -r '([.resource_changes[]?.change.actions?]|flatten)|{"create":(map(select(.=="create"))|length),"update":(map(select(.=="update"))|length),"delete":(map(select(.=="delete"))|length)}' > plan.json
-  artifacts:
-    name: TerraformPlan
-    reports:
-      terraform: plan.json
+include:
+  - local: .gitlab/ci/auto-release.yml
+  
