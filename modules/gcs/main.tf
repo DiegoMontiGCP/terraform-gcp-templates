@@ -1,16 +1,18 @@
 
 locals {
   merge_default_config = [for bucket in var.bucket_names : merge(var.bucket_configuration_default, bucket)]
+  iterator             = { for bucket in local.merge_default_config : bucket.name => bucket }
 }
 
 
 resource "google_storage_bucket" "buckets" {
-  for_each                    = { for bucket in local.merge_default_config : bucket.name => bucket }
-  name                        = each.key
-  project                     = var.project_id
-  location                    = each.value.location != null ? each.value.location : var.region
-  storage_class               = each.value.storage_class
-  force_destroy               = each.value.force_destroy
+  for_each      = local.iterator
+  name          = each.key
+  project       = var.project_id
+  location      = each.value.location != null ? each.value.location : var.region
+  storage_class = each.value.storage_class
+  force_destroy = each.value.force_destroy
+  #checkov:skip=CKV_GCP_29: configurable by the user
   uniform_bucket_level_access = each.value.uniform_bucket_level_access
 
 
@@ -42,6 +44,7 @@ resource "google_storage_bucket" "buckets" {
 
   labels = each.value.labels
 
+  #checkov:skip=CKV_GCP_5: configurable by the user
   dynamic "encryption" {
     for_each = each.value.encryption_key_id == null ? [] : [each.value.encryption_key_id]
     content {
