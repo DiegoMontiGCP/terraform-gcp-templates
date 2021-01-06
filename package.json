@@ -1,27 +1,35 @@
 {
-    "plugins": [
-        "@semantic-release/commit-analyzer",
-        "@semantic-release/release-notes-generator",
-        "@semantic-release/changelog",
-        "@semantic-release/gitlab",
-        "@semantic-release/npm",
-        "@semantic-release/git"
-
-    ],
-    "release": {
-        "extends": "@semantic-release/gitlab-config",
-        "prepare": [
-          "@semantic-release/changelog",
-          "@semantic-release/npm",
-          {
-            "path": "@semantic-release/git",
-            "assets": [
-              "package.json",
-              "package-lock.json",
-              "CHANGELOG.md"
-            ],
-            "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-          }
-        ]
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    "@semantic-release/gitlab",
+    "@semantic-release/git"
+  ],
+  "release": {
+    "extends": "@semantic-release/gitlab-config",
+    "prepare": [
+      "@semantic-release/changelog"
+      {
+        "path": "@semantic-release/git",
+        "assets": [
+          "package.json",
+          "package-lock.json",
+          "CHANGELOG.md"
+        ],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
+    ]
+  },
+  "devDependencies": {
+    "@semantic-release/gitlab-config": "^8.0.0",
+    "semantic-release": "^17.3.1"
+  },
+  "dependencies": {
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/exec": "^5.0.0",
+    "@semantic-release/git": "^9.0.0",
+    "@semantic-release/gitlab": "^6.0.8",
+    "package.json": "^2.0.1"
   }
+}
