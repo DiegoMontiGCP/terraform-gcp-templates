@@ -4,12 +4,12 @@
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
     "@semantic-release/gitlab",
-    "@semantic-release/git"
+    "@semantic-release/npm"
   ],
   "release": {
     "extends": "@semantic-release/gitlab-config",
     "prepare": [
-      "@semantic-release/changelog"
+      "@semantic-release/changelog",
       {
         "path": "@semantic-release/git",
         "assets": [
