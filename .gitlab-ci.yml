@@ -1,17 +1,51 @@
-workflow:
-  rules:
-    # For merge requests, create a pipeline.
-    - if: '$CI_MERGE_REQUEST_IID'
-    # For `master` branch, create a pipeline (this includes on schedules, pushes, merges, etc.).
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-    - if: '$CI_COMMIT_TAG'
-
 stages:
-  # - test
-  # - build
-  # - deploy
-  - prepare
+  - fetch-version
+  - build
   - release
-
-include:
-  - local: .gitlab/ci/auto-release.yml
+fetch-semantic-version:
+  # Requires Node >= 10.13 version
+  image: node:13
+  stage: fetch-version
+  only:
+    refs:
+    - master
+    - alpha
+    - /^(([0-9]+)\.)?([0-9]+)\.x/ # This matches maintenance branches
+    - /^([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$/ # This matches pre-releases
+  script:
+    - npm install @semantic-release/gitlab @semantic-release/exec
+    - npx semantic-release --generate-notes false --dry-run
+  artifacts:
+    paths:
+    - VERSION.txt
+generate-non-semantic-version:
+  stage: fetch-version
+  except:
+    refs:
+    - master
+    - alpha
+    - /^(([0-9]+)\.)?([0-9]+)\.x/ # This matches maintenance branches
+    - /^([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$/ # This matches pre-releases
+  script:
+    - echo build-$CI_PIPELINE_ID > VERSION.txt
+  artifacts:
+    paths:
+    - VERSION.txt
+build:
+  stage: build
+  script:
+    - echo "Version is $(cat VERSION.txt)"
+release:
+  image: node:13
+  stage: release
+  only:
+    refs:
+    - master
+    - alpha
+    # This matches maintenance branches
+    - /^(([0-9]+)\.)?([0-9]+)\.x/
+    # This matches pre-releases
+    - /^([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$/ 
+  script:
+    - npm install @semantic-release/gitlab
+    - npx semantic-release
