@@ -11,7 +11,7 @@ fetch-semantic-version:
     - master
   script:
     - npm install @semantic-release/gitlab @semantic-release/exec
-    - npx -p semantic-release --generate-notes false --dry-run
+    - npx semantic-release --generate-notes false --dry-run
   artifacts:
     paths:
     - VERSION.txt
