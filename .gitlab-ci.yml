@@ -1,10 +1,3 @@
-image: alpine:latest
-
-#      - validate / lint 
-#      - plan_examples
-#      - approve
-#      - auto-release
-
 workflow:
   rules:
     # For merge requests, create a pipeline.
@@ -13,44 +6,12 @@ workflow:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
     - if: '$CI_COMMIT_TAG'
 
-variables:
-  PLAN: plan.tfplan
-  PLAN_JSON: tfplan.json
-  TF_ROOT: ${CI_PROJECT_DIR}
-  TERRAFORM_VERSION: "0.14.3"
-  TF_IN_AUTOMATION: "TRUE"
-  TFLINT_VERSION: "v0.23.0"
-  TF_DOCS_VERSION: "0.6.0"
-cache:
-  paths:
-    - tfplan.enc.zip
-
 stages:
-  - pre-checks
-  - tf-lint
-  - plan
+  # - test
+  # - build
+  # - deploy
   - prepare
   - release
 
-  
-  
-precommit:
-  stage: pre-checks
-  image: python:buster
-  before_script:
-    - apt-get update
-    - apt-get install -y shellcheck zip jq
-    - TF_ZIP="terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
-    - wget "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/${TF_ZIP}"
-    - unzip ${TF_ZIP} && rm ${TF_ZIP}
-    - mv terraform /usr/bin/terraform
-    - curl -Lo ./terraform-docs https://github.com/terraform-docs/terraform-docs/releases/download/v0.10.1/terraform-docs-v0.10.1-linux-amd64
-    - chmod +x  ./terraform-docs
-    - mv ./terraform-docs /usr/bin/terraform-docs 
-    - pip3 install pre-commit
-  script:
-    - pre-commit run --all-files
-
 include:
   - local: .gitlab/ci/auto-release.yml
-  
