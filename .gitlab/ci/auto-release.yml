@@ -5,17 +5,17 @@ generate_tag:
       when: never
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH # Run this job when the default branch changes
   script:
-    - echo "TAG=$(cat VERSION)" > tag.env
+    - echo "TAG=$(cat SEMANTIC_VERISON)" > tag.env
   artifacts:
     reports:
       dotenv: tag.env
 
 auto-release-master:
+  stage: release
   image: registry.gitlab.com/gitlab-org/release-cli
   needs:
     - job: generate_tag
       artifacts: true
-  stage: release
   rules:
     - if: $CI_COMMIT_TAG
       when: never                                 # Do not run this job when a tag is created manually
