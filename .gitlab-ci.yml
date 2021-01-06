@@ -8,5 +8,5 @@ semantic_release:
     - master
   script:
     - npm i
-    - npm install @semantic-release/gitlab @semantic-release/exec
+    - npm install @semantic-release/gitlab @semantic-release/exec @semantic-release/gitlab-config @semantic-release/changelog @semantic-release/git
     - npx semantic-release
