@@ -15,6 +15,6 @@ stages:
 
 include:
   # - local: .gitlab/ci/test-build-deploy.yml
-  # - local: .gitlab/ci/auto-release.yml
-  - local: .gitlab/ci/release-from-tag.yml
+  - local: .gitlab/ci/auto-release.yml
+  # - local: .gitlab/ci/release-from-tag.yml
   
