@@ -3,8 +3,7 @@
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
-    "@semantic-release/gitlab",
-    "@semantic-release/npm"
+    "@semantic-release/gitlab"
   ],
   "release": {
     "extends": "@semantic-release/gitlab-config",
