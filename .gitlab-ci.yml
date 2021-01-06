@@ -1,12 +1,12 @@
 stages:
   - release
 
-semantic_release:
-  image: node:12
+release:
+  image: node:13
   stage: release
   only:
+    refs:
     - master
   script:
-    - npm i
-    - npm install @semantic-release/gitlab @semantic-release/exec @semantic-release/gitlab-config @semantic-release/changelog @semantic-release/git
+    - npm install @semantic-release/gitlab @semantic-release/exec
     - npx semantic-release
