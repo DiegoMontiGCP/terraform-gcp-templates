@@ -51,7 +51,7 @@ security-check:
 terratest:
   stage: test
   image:
-    name: "hashicorp/terraform:full"
+    name: hashicorp/terraform:light
     entrypoint:
       - "/usr/bin/env"
       - "PATH=/go/bin:/usr/local/go/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
