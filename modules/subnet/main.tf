@@ -16,10 +16,11 @@ locals {
 
     }
   ])
+  iterator = { for subnet in local.network_subnets : subnet.subnet_name => subnet }
 }
 
 resource "google_compute_subnetwork" "subnetwork" {
-  for_each = { for subnet in local.network_subnets : subnet.subnet_name => subnet }
+  for_each = local.iterator
 
   project                  = var.project_id
   network                  = var.network_name
@@ -29,6 +30,7 @@ resource "google_compute_subnetwork" "subnetwork" {
   description              = each.value.description
   private_ip_google_access = each.value.private_ip_google_access
 
+  #checkov:skip=CKV_GCP_26: configurable by the user
   dynamic "log_config" {
     for_each = each.value.enable_logs
     content {
