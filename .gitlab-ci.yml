@@ -7,20 +7,17 @@ image: alpine:latest
 
 variables:
   GITLAB_TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/${CI_PROJECT_NAME}
-  PLAN: plan.tfplan
-  PLAN_JSON: tfplan.json
   TF_ROOT: ${CI_PROJECT_DIR}
   TERRAFORM_VERSION: "0.14.3"
   TF_DOCS_VERSION: "v0.10.1"
   TF_IN_AUTOMATION: "TRUE"
-
+  TEST_DIR: "${CI_PROJECT_DIR}/test/vpc-network"
 cache:
   paths:
     - tfplan.enc.zip
 
 stages:
   - pre-checks
-  - plan
   - test
   - release
 
@@ -51,32 +48,22 @@ security-check:
 terratest:
   stage: test
   image:
-    name: hashicorp/terraform:light
+    name: golang:1.15.6-alpine3.12
     entrypoint:
       - "/usr/bin/env"
       - "PATH=/go/bin:/usr/local/go/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-  script:
-    - go test ./test/vpc-network
-
-    
-terraform-plan:
-  stage: plan
+      - "CGO_ENABLED=0"
   before_script:
     - apk add zip jq
     - TF_ZIP="terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
     - wget "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/${TF_ZIP}"
     - unzip ${TF_ZIP} && rm ${TF_ZIP}
     - mv terraform /usr/bin/terraform
+    - cd ${TEST_DIR}
     - echo ${GCP_CREDENTIALS} > key.json
-    - export GOOGLE_APPLICATION_CREDENTIALS=key.json
-  script: 
-    - terraform init -input=false
-    - terraform plan -input=false -out tfplan
-    - terraform show -json tfplan | jq -r '([.resource_changes[]?.change.actions?]|flatten)|{"create":(map(select(.=="create"))|length),"update":(map(select(.=="update"))|length),"delete":(map(select(.=="delete"))|length)}' > plan.json
-  artifacts:
-    name: TerraformPlan
-    reports:
-      terraform: plan.json
+    - export GOOGLE_APPLICATION_CREDENTIALS="${TEST_DIR}/key.json"
+  script:
+    - go test -v -timeout 30m 
 
 release:
   image: node:13
