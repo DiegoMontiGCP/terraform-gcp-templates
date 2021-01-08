@@ -60,8 +60,7 @@ terratest:
     - export GOOGLE_APPLICATION_CREDENTIALS="${TEST_DIR}/key.json"
   script:
     - go test -v -timeout 30m 
-
-    
+   
 release:
   image: node:13
   stage: release
