@@ -61,6 +61,7 @@ terratest:
   script:
     - go test -v -timeout 30m 
 
+    
 release:
   image: node:13
   stage: release
