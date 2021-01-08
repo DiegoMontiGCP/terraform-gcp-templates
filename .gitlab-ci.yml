@@ -7,7 +7,7 @@ variables:
   TERRAFORM_VERSION: "0.14.3"
   TF_DOCS_VERSION: "v0.10.1"
   TF_IN_AUTOMATION: "TRUE"
-  TEST_DIR: "${CI_PROJECT_DIR}/test/vpc-network"
+  TEST_DIR: "${CI_PROJECT_DIR}/test/src"
 cache:
   paths:
     - tfplan.enc.zip
