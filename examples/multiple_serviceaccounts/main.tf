@@ -3,7 +3,7 @@ terraform {
 
 
   backend "gcs" {
-    bucket = "datatonic-devops-play-tfstate"
+    bucket = "terraform-cicd-storage"
     prefix = "terraform-template/state"
   }
 

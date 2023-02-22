@@ -1,5 +1,5 @@
 variable "project_id" {
-  description = "The ID of the project where subnets will be created"
+  description = "testing-terraform-deploy"
 }
 
 variable "service_accounts" {
